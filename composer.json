@@ -10,5 +10,8 @@
     "license": "MIT",
     "require": {
         "wp-cli/php-cli-tools": "^0.12.1"
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "^3.11"
     }
 }
