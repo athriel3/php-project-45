@@ -1,0 +1,31 @@
+#!/usr/bin/env php
+<?php
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+use function cli\line;
+use function cli\prompt;
+use function BrainGames\Cli\welcome;
+
+$userName = welcome();
+line("Answer \"yes\" if the number is even, otherwise answer \"no\".");
+
+$countOfCorrectAnswers = 0;
+while (true) {
+    if ($countOfCorrectAnswers === 3) {
+        line("Congratulations, {$userName}!");
+        break;
+    }
+    $randomNumber = rand(1, 100);
+    line("Question: {$randomNumber}");
+    $correctAnswer = $randomNumber % 2 === 0 ? "yes" : "no";
+    $userAnswer = prompt("Your answer");
+    if ($userAnswer === $correctAnswer) {
+        line("Correct!");
+        $countOfCorrectAnswers += 1;
+    } else {
+        line("'{$userAnswer}' is wrong answer ;(. Correct answer was '{$correctAnswer}'.");
+        line("Let's try again, {$userName}!");
+        break;
+}
+}
