@@ -12,8 +12,6 @@ $userName = welcome();
 line("Find the greatest common divisor of given numbers.");
 
 $countOfCorrectAnswers = 0;
-$randomNumber0 = rand(1, 100);
-$randomNumber1 = rand(1, 100);
 
 function getGcd($a, $b) {
     while ($b != 0) {
