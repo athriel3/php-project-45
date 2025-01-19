@@ -1,0 +1,46 @@
+#!/usr/bin/env php
+<?php
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+use function cli\line;
+use function cli\prompt;
+use function BrainGames\Cli\welcome;
+
+$userName = welcome();
+
+line("Find the greatest common divisor of given numbers.");
+
+$countOfCorrectAnswers = 0;
+$randomNumber0 = rand(1, 100);
+$randomNumber1 = rand(1, 100);
+
+function getGcd($a, $b) {
+    while ($b != 0) {
+        $temp = $b;
+        $b = $a % $b;
+        $a = $temp;
+    }
+    return $a;
+}
+
+while (true) {
+    if ($countOfCorrectAnswers === 3) {
+        line("Congratulations, {$userName}!");
+        break;
+    }
+    $randomNumber0 = rand(1, 100);
+    $randomNumber1 = rand(1, 100);
+    $correctAnswer = (string) getGcd($randomNumber0, $randomNumber1);
+    line("Question: {$randomNumber0} {$randomNumber1}");
+    $userAnswer = prompt("Your answer");
+
+    if ($userAnswer === $correctAnswer) {
+        line("Correct!");
+        $countOfCorrectAnswers += 1;
+    } else {
+        line("'{$userAnswer}' is wrong answer ;(. Correct answer was '{$correctAnswer}'.");
+        line("Let's try again, {$userName}!");
+        break;
+    }
+}
