@@ -3,42 +3,12 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use function cli\line;
-use function cli\prompt;
-use function BrainGames\Cli\welcome;
+use function BrainGames\Engine\runGame;
+use function BrainGames\Engine\getGcd;
 
-$userName = welcome();
-
-line("Find the greatest common divisor of given numbers.");
-
-$countOfCorrectAnswers = 0;
-
-function getGcd($a, $b) {
-    while ($b != 0) {
-        $temp = $b;
-        $b = $a % $b;
-        $a = $temp;
-    }
-    return $a;
-}
-
-while (true) {
-    if ($countOfCorrectAnswers === 3) {
-        line("Congratulations, {$userName}!");
-        break;
-    }
-    $randomNumber0 = rand(1, 100);
-    $randomNumber1 = rand(1, 100);
-    $correctAnswer = (string) getGcd($randomNumber0, $randomNumber1);
-    line("Question: {$randomNumber0} {$randomNumber1}");
-    $userAnswer = prompt("Your answer");
-
-    if ($userAnswer === $correctAnswer) {
-        line("Correct!");
-        $countOfCorrectAnswers += 1;
-    } else {
-        line("'{$userAnswer}' is wrong answer ;(. Correct answer was '{$correctAnswer}'.");
-        line("Let's try again, {$userName}!");
-        break;
-    }
-}
+runGame("Find the greatest common divisor of given numbers.", function () {
+    $number1 = rand(1, 100);
+    $number2 = rand(1, 100);
+    $correctAnswer = (string)getGcd($number1, $number2);
+    return ["{$number1} {$number2}", $correctAnswer];
+});

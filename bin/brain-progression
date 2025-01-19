@@ -3,54 +3,17 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use function cli\line;
-use function cli\prompt;
-use function BrainGames\Cli\welcome;
+use function BrainGames\Engine\runGame;
+use function BrainGames\Engine\generateProgression;
 
-$userName = welcome();
-
-line("What number is missing in the progression?");
-
-$countOfCorrectAnswers = 0;
-
-function generateProgressionArray(): array
-{
-    $progressionLength = rand(5, 10);
-    $progressionStart = rand(0, 100);
-    $progressionDifference = rand(-10, 10);
-    $progressionArray = [$progressionStart];
-    for ($i = 1; $i < $progressionLength; $i++) {
-        $progressionArray[$i] = $progressionArray[$i-1] + $progressionDifference;
-    }
-    return $progressionArray;
-}
-
-function createProgressionArrayPass(array $progressionArray, int $passIndex): array
-{
-    $progressionArray[$passIndex] = '..';
-    return $progressionArray;
-}
-
-while (true) {
-    if ($countOfCorrectAnswers === 3) {
-        line("Congratulations, {$userName}!");
-        break;
-    }
-
-    $progressionArray = generateProgressionArray();
-    $passIndex = rand(0, count($progressionArray));
-    $correctAnswer = (string) $progressionArray[$passIndex];
-    $progressionArrayWithPass = createProgressionArrayPass($progressionArray, $passIndex);
-    $arrayString = implode(' ', $progressionArrayWithPass);
-    line("Question: {$arrayString}");
-    $userAnswer = prompt("Your answer");
-
-    if ($userAnswer === $correctAnswer) {
-        line("Correct!");
-        $countOfCorrectAnswers += 1;
-    } else {
-        line("'{$userAnswer}' is wrong answer ;(. Correct answer was '{$correctAnswer}'.");
-        line("Let's try again, {$userName}!");
-        break;
-    }
-}
+runGame("What number is missing in the progression?", function () {
+    $length = rand(5, 10);
+    $start = rand(0, 100);
+    $step = rand(1, 10);
+    $progression = generateProgression($length, $start, $step);
+    $hiddenIndex = array_rand($progression);
+    $correctAnswer = (string)$progression[$hiddenIndex];
+    $progression[$hiddenIndex] = '..';
+    $question = implode(' ', $progression);
+    return [$question, $correctAnswer];
+});

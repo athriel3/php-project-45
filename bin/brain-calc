@@ -3,48 +3,18 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use function cli\line;
-use function cli\prompt;
-use function BrainGames\Cli\welcome;
+use function BrainGames\Engine\runGame;
 
-$userName = welcome();
-
-line("What is the result of the expression?");
-
-$countOfCorrectAnswers = 0;
-$operands = ['+', '-', '*'];
-
-while (true) {
-    if ($countOfCorrectAnswers === 3) {
-        line("Congratulations, {$userName}!");
-        break;
-    }
+runGame("What is the result of the expression?", function () {
+    $operators = ['+', '-', '*'];
     $operator0 = rand(1, 100);
     $operator1 = rand(1, 100);
-    $operand = $operands[rand(0, 2)];
-    $expression = "{$operator0} {$operand} {$operator1}";
+    $operand = $operators[array_rand($operators)];
+    $question = "{$operator0} {$operand} {$operator1}";
+
     switch ($operand) {
-        case "+": 
-            $correctAnswer = $operator0 + $operator1;
-            break;
-        case "-": 
-            $correctAnswer = $operator0 - $operator1;
-            break;
-        case "*": 
-            $correctAnswer = $operator0 * $operator1;
-            break;
+        case '+': return [$question, (string)($operator0 + $operator1)];
+        case '-': return [$question, (string)($operator0 - $operator1)];
+        case '*': return [$question, (string)($operator0 * $operator1)];
     }
-
-    $correctAnswer = (string) $correctAnswer;
-    line("Question: {$expression}");
-    $userAnswer = prompt("Your answer");
-
-    if ($userAnswer === $correctAnswer) {
-        line("Correct!");
-        $countOfCorrectAnswers += 1;
-    } else {
-        line("'{$userAnswer}' is wrong answer ;(. Correct answer was '{$correctAnswer}'.");
-        line("Let's try again, {$userName}!");
-        break;
-    }
-}
+});

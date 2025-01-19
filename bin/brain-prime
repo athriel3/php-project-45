@@ -3,46 +3,11 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use function cli\line;
-use function cli\prompt;
-use function BrainGames\Cli\welcome;
+use function BrainGames\Engine\runGame;
+use function BrainGames\Engine\isPrime;
 
-$userName = welcome();
-
-line("Answer \"yes\" if given number is prime. Otherwise answer \"no\".");
-
-$countOfCorrectAnswers = 0;
-
-function isPrime($number) {
-    if ($number < 2) {
-        return false;
-    }
-    for ($i = 2; $i <= sqrt($number); $i++) {
-        if ($number % $i === 0) {
-            return false;
-        }
-    }
-    
-    return true;
-}
-
-while (true) {
-    if ($countOfCorrectAnswers === 3) {
-        line("Congratulations, {$userName}!");
-        break;
-    }
-    
-    $randomNumber = rand(1, 1000);
-    $correctAnswer = isPrime($randomNumber) ? 'yes' : 'no';
-    line("Question: {$randomNumber}");
-    $userAnswer = prompt("Your answer");
-
-    if ($userAnswer === $correctAnswer) {
-        line("Correct!");
-        $countOfCorrectAnswers += 1;
-    } else {
-        line("'{$userAnswer}' is wrong answer ;(. Correct answer was '{$correctAnswer}'.");
-        line("Let's try again, {$userName}!");
-        break;
-    }
-}
+runGame("Answer \"yes\" if given number is prime. Otherwise answer \"no\".", function () {
+    $number = rand(1, 100);
+    $correctAnswer = isPrime($number) ? "yes" : "no";
+    return [$number, $correctAnswer];
+});

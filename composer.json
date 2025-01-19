@@ -10,7 +10,8 @@
     ],
     "autoload": {
         "files": [
-            "src/Cli.php"
+            "src/Cli.php",
+            "src/Engine.php"
         ]
     },
     "description": "hexlet brain-games package",
