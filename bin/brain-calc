@@ -8,18 +8,37 @@ use function cli\prompt;
 use function BrainGames\Cli\welcome;
 
 $userName = welcome();
-line("Answer \"yes\" if the number is even, otherwise answer \"no\".");
+
+line("What is the result of the expression?");
 
 $countOfCorrectAnswers = 0;
+$operands = ['+', '-', '*'];
+
 while (true) {
     if ($countOfCorrectAnswers === 3) {
         line("Congratulations, {$userName}!");
         break;
     }
-    $randomNumber = rand(1, 100);
-    line("Question: {$randomNumber}");
-    $correctAnswer = $randomNumber % 2 === 0 ? "yes" : "no";
+    $operator0 = rand(1, 100);
+    $operator1 = rand(1, 100);
+    $operand = $operands[rand(0, 2)];
+    $expression = "{$operator0} {$operand} {$operator1}";
+    switch ($operand) {
+        case "+": 
+            $correctAnswer = $operator0 + $operator1;
+            break;
+        case "-": 
+            $correctAnswer = $operator0 - $operator1;
+            break;
+        case "*": 
+            $correctAnswer = $operator0 * $operator1;
+            break;
+    }
+
+    $correctAnswer = (string) $correctAnswer;
+    line("Question: {$expression}");
     $userAnswer = prompt("Your answer");
+
     if ($userAnswer === $correctAnswer) {
         line("Correct!");
         $countOfCorrectAnswers += 1;
